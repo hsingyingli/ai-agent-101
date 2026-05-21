@@ -1,0 +1,13 @@
+[project]
+name = "ai-agent-101"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "asyncio>=4.0.0",
+    "google-genai>=2.5.0",
+    "pydantic>=2.13.4",
+    "pydantic-settings>=2.14.1",
+    "pyyaml>=6.0.3",
+]
