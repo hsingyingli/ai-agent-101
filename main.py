@@ -1,43 +1,33 @@
 from google import genai
 
-from src.messages import Message, to_contents
+from src.agent import Agent
 from src.settings import get_settings
 
 settings = get_settings()
 
-client = genai.Client(
-    vertexai=True,
-    project=settings.gcp_project,
-    location=settings.gcp_location,
-)
 
-history: list[Message] = []
+agent = Agent(
+    client=genai.Client(
+        vertexai=True,
+        project=settings.gcp_project,
+        location=settings.gcp_location,
+    )
+)
 
 
 def main():
     while True:
-        user_input = input("> ")
-        if not user_input.strip():
+        user_prompt = input("> ")
+        if not user_prompt.strip():
             continue
-        if user_input.strip() == "/exit":
+        if user_prompt.strip() == "/exit":
             print("Happy Coding!!")
             break
 
-        history.append(Message(role="user", text=user_input))
+        response = agent.chat(user_prompt)
 
-        response = client.models.generate_content_stream(
-            model="gemini-3.1-flash-lite",
-            contents=to_contents(history),
-        )
-
-        reply_chunks: list[str] = []
         for chunk in response:
-            if chunk.text:
-                print(chunk.text, end="", flush=True)
-                reply_chunks.append(chunk.text)
-        print()
-
-        history.append(Message(role="assistant", text="".join(reply_chunks)))
+            print(chunk)
 
 
 if __name__ == "__main__":
