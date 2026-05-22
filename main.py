@@ -1,9 +1,16 @@
 from google import genai
 
 from src.agent import Agent
+from src.tools import tool
 from src.settings import get_settings
 
 settings = get_settings()
+
+
+@tool(description="when you need add two number")
+def add(num1: int, num2: int) -> int:
+    print(f"use tool to calculate {num1} + {num2}")
+    return num1 + num2
 
 
 agent = Agent(
@@ -11,7 +18,8 @@ agent = Agent(
         vertexai=True,
         project=settings.gcp_project,
         location=settings.gcp_location,
-    )
+    ),
+    tools=[add],
 )
 
 
